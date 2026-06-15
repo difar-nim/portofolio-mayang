@@ -23,8 +23,8 @@ async function seed() {
         }
 
         console.log('==============================================');
-        console.log('Username : admin');
-        console.log('Password : admin123');
+        console.log('Username : mayang');
+        console.log('Password : snims');
         console.log('==============================================');
         console.log('Silakan login menggunakan kredensial di atas.');
 

@@ -6,8 +6,8 @@ const pool = require('./db');
 
 async function seed() {
     try {
-        const username = 'admin';
-        const plainPassword = 'admin123';
+        const username = 'mayang';
+        const plainPassword = 'snims';
         const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
         // Cek apakah admin sudah ada

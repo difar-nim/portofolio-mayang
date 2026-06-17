@@ -31,16 +31,9 @@ async function loadTugas() {
                 day: "numeric", month: "long", year: "numeric"
             });
 
-            // Konversi link Google Drive ke link view langsung
-            let fileLink = "";
-            if (tugas.file) {
-                let driveUrl = tugas.file;
-                const matchId = driveUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
-                if (matchId) {
-                    driveUrl = `https://drive.google.com/file/d/${matchId[1]}/view`;
-                }
-                fileLink = `<a href="${driveUrl}" target="_blank" class="btn btn-outline drive-btn">📄 Buka File</a>`;
-            }
+            const fileLink = tugas.file
+                ? `<a href="${tugas.file}" target="_blank" class="btn btn-outline drive-btn">📄 Buka File</a>`
+                : "";
 
             const card = document.createElement("div");
             card.className = "card";

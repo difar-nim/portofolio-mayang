@@ -17,21 +17,17 @@ const judulInput = document.getElementById("judul");
 const deskripsiInput = document.getElementById("deskripsi");
 const tanggalInput = document.getElementById("tanggal");
 const fileInput = document.getElementById("file");
-const currentFileDiv = document.getElementById("current-file");
 const submitBtn = document.getElementById("submit-btn");
 const cancelBtn = document.getElementById("cancel-edit-btn");
 const tableBody = document.getElementById("tugas-table-body");
 const errorMsg = document.getElementById("error-msg");
 const successMsg = document.getElementById("success-msg");
-const uploadProgress = document.getElementById("upload-progress");
-const progressBar = document.getElementById("progress-bar");
-const progressText = document.getElementById("progress-text");
 
 function showError(msg) {
     errorMsg.textContent = msg;
     errorMsg.style.display = "block";
     successMsg.style.display = "none";
-    setTimeout(() => errorMsg.style.display = "none", 5000);
+    setTimeout(() => errorMsg.style.display = "none", 4000);
 }
 
 function showSuccess(msg) {
@@ -51,6 +47,14 @@ function handleAuthError(response) {
     return false;
 }
 
+// Konversi link Google Drive ke format view
+function getDriveViewUrl(url) {
+    if (!url) return null;
+    const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (match) return `https://drive.google.com/file/d/${match[1]}/view`;
+    return url;
+}
+
 async function loadTugasTable() {
     try {
         const response = await fetch(`${API_BASE_URL}/tugas`);
@@ -67,8 +71,9 @@ async function loadTugasTable() {
                 day: "numeric", month: "short", year: "numeric"
             });
 
-            const fileCell = tugas.file
-                ? `<a href="${tugas.file}" target="_blank" style="color:#1a73e8;">📄 ${tugas.file_name || 'Lihat File'}</a>`
+            const driveUrl = getDriveViewUrl(tugas.file);
+            const fileCell = driveUrl
+                ? `<a href="${driveUrl}" target="_blank" style="color:#1a73e8;">📄 Lihat File</a>`
                 : "-";
 
             const row = document.createElement("tr");
@@ -101,56 +106,34 @@ form.addEventListener("submit", async (e) => {
     const id = idInput.value;
     const isEdit = !!id;
 
-    const formData = new FormData();
-    formData.append("judul", judulInput.value.trim());
-    formData.append("deskripsi", deskripsiInput.value.trim());
-    formData.append("tanggal", tanggalInput.value);
-    if (fileInput.files[0]) {
-        formData.append("file", fileInput.files[0]);
-    }
+    const body = {
+        judul: judulInput.value.trim(),
+        deskripsi: deskripsiInput.value.trim(),
+        tanggal: tanggalInput.value,
+        file: fileInput.value.trim() || null
+    };
 
     const url = isEdit ? `${API_BASE_URL}/tugas/${id}` : `${API_BASE_URL}/tugas`;
     const method = isEdit ? "PUT" : "POST";
 
-    // Tampilkan progress
-    submitBtn.disabled = true;
-    submitBtn.textContent = "⏳ Mengupload...";
-    if (fileInput.files[0]) {
-        uploadProgress.style.display = "block";
-        progressBar.style.width = "30%";
-        progressText.textContent = "Mengupload file ke Cloudinary...";
-    }
-
     try {
         const response = await fetch(url, {
             method,
-            headers: { "Authorization": `Bearer ${token}` },
-            body: formData
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(body)
         });
-
-        progressBar.style.width = "100%";
-        progressText.textContent = "Selesai!";
 
         if (handleAuthError(response)) return;
         const data = await response.json();
-
-        if (!response.ok) {
-            showError(data.message || "Gagal menyimpan.");
-            return;
-        }
-
+        if (!response.ok) { showError(data.message || "Gagal menyimpan."); return; }
         showSuccess(isEdit ? "✅ Tugas berhasil diperbarui." : "✅ Tugas berhasil ditambahkan.");
         resetForm();
         loadTugasTable();
     } catch (err) {
         showError("Tidak dapat terhubung ke server.");
-    } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = isEdit ? "💾 Update Tugas" : "💾 Simpan Tugas";
-        setTimeout(() => {
-            uploadProgress.style.display = "none";
-            progressBar.style.width = "0%";
-        }, 1500);
     }
 });
 
@@ -162,9 +145,7 @@ function editTugas(id, data) {
     judulInput.value = tugas.judul;
     deskripsiInput.value = tugas.deskripsi || "";
     tanggalInput.value = tugas.tanggal.split("T")[0];
-    currentFileDiv.innerHTML = tugas.file
-        ? `<small style="color:#1a73e8;">File saat ini: <a href="${tugas.file}" target="_blank">${tugas.file_name || 'Lihat File'}</a> (kosongkan jika tidak ingin mengganti)</small>`
-        : "";
+    fileInput.value = tugas.file || "";
     submitBtn.textContent = "💾 Update Tugas";
     cancelBtn.style.display = "inline-block";
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -192,9 +173,7 @@ function resetForm() {
     idInput.value = "";
     formTitle.textContent = "Tambah Tugas Baru";
     submitBtn.textContent = "💾 Simpan Tugas";
-    submitBtn.disabled = false;
     cancelBtn.style.display = "none";
-    currentFileDiv.innerHTML = "";
 }
 
 cancelBtn.addEventListener("click", resetForm);

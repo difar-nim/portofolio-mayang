@@ -12,6 +12,14 @@ document.querySelectorAll(".nav-menu li a").forEach(n => n.addEventListener("cli
     navMenu.classList.remove("active");
 }));
 
+// Konversi link Google Drive ke format view langsung
+function getDriveViewUrl(url) {
+    if (!url) return null;
+    const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (match) return `https://drive.google.com/file/d/${match[1]}/view`;
+    return url;
+}
+
 // Load tugas dari API
 async function loadTugas() {
     const container = document.getElementById("tugas-container");
@@ -31,9 +39,9 @@ async function loadTugas() {
                 day: "numeric", month: "long", year: "numeric"
             });
 
-            // Gunakan download_url agar file non-gambar bisa dibuka/didownload
-            const fileLink = tugas.download_url
-                ? `<a href="${tugas.download_url}" target="_blank" class="btn btn-outline drive-btn">📄 Buka / Download File</a>`
+            const driveUrl = getDriveViewUrl(tugas.file);
+            const fileLink = driveUrl
+                ? `<a href="${driveUrl}" target="_blank" class="btn btn-outline drive-btn">📄 Buka File</a>`
                 : "";
 
             const card = document.createElement("div");

@@ -8,53 +8,49 @@
   </head>
   <body>
     <nav class="admin-navbar">
-      <div class="logo">Dashboard Admin</div>
+      <div class="logo">⚙️ Dashboard Admin</div>
       <div class="nav-actions">
-        <span id="welcome-text" style="font-size:0.9rem; color: var(--text-gray);"></span>
+        <span id="welcome-text"></span>
         <a href="../index.html" target="_blank">Lihat Website</a>
         <button id="logout-btn" class="btn btn-secondary btn-sm">Logout</button>
       </div>
     </nav>
 
     <div class="admin-container">
-      <!-- Form Tambah / Edit Tugas -->
       <div class="admin-card">
         <h2 id="form-title">Tambah Tugas Baru</h2>
-
         <div id="success-msg" class="success-msg"></div>
         <div id="error-msg" class="error-msg"></div>
 
-        <form id="tugas-form" enctype="multipart/form-data">
+        <form id="tugas-form">
           <input type="hidden" id="tugas-id" />
-
           <div class="form-group">
             <label for="judul">Judul Tugas</label>
-            <input type="text" id="judul" name="judul" required />
+            <input type="text" id="judul" required placeholder="Contoh: Tugas Pengantar TI" />
           </div>
-
           <div class="form-group">
             <label for="deskripsi">Deskripsi</label>
-            <textarea id="deskripsi" name="deskripsi"></textarea>
+            <textarea id="deskripsi" placeholder="Deskripsi singkat tugas..."></textarea>
           </div>
-
           <div class="form-group">
             <label for="tanggal">Tanggal</label>
-            <input type="date" id="tanggal" name="tanggal" required />
+            <input type="date" id="tanggal" required />
           </div>
-
           <div class="form-group">
-            <label for="file">File Tugas (PDF, DOC, PPT, ZIP, dll)</label>
-            <input type="file" id="file" name="file" />
-            <small>Maks 10MB. Kosongkan jika tidak ingin mengganti file.</small>
-            <div id="current-file"></div>
+            <label for="file">Link Google Drive</label>
+            <input type="url" id="file" placeholder="https://drive.google.com/file/d/..." />
+            <small>
+              Cara mendapatkan link: Upload file ke Google Drive → Klik kanan → <strong>Share</strong> →
+              Ubah akses ke <strong>"Anyone with the link"</strong> → Copy link → Paste di sini.
+            </small>
           </div>
-
-          <button type="submit" id="submit-btn" class="btn">Simpan Tugas</button>
-          <button type="button" id="cancel-edit-btn" class="btn btn-secondary" style="display:none;">Batal Edit</button>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button type="submit" id="submit-btn" class="btn">💾 Simpan Tugas</button>
+            <button type="button" id="cancel-edit-btn" class="btn btn-secondary" style="display:none;">✕ Batal Edit</button>
+          </div>
         </form>
       </div>
 
-      <!-- Tabel Daftar Tugas -->
       <div class="admin-card">
         <h2>Daftar Tugas</h2>
         <div class="table-wrapper">

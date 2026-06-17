@@ -31,8 +31,9 @@ async function loadTugas() {
                 day: "numeric", month: "long", year: "numeric"
             });
 
-            const fileLink = tugas.file
-                ? `<a href="${tugas.file}" target="_blank" class="btn btn-outline drive-btn">📄 Buka File</a>`
+            // Gunakan download_url agar file non-gambar bisa dibuka/didownload
+            const fileLink = tugas.download_url
+                ? `<a href="${tugas.download_url}" target="_blank" class="btn btn-outline drive-btn">📄 Buka / Download File</a>`
                 : "";
 
             const card = document.createElement("div");
@@ -48,7 +49,7 @@ async function loadTugas() {
             container.appendChild(card);
         });
     } catch (err) {
-        container.innerHTML = `<p class="text-center">Gagal memuat data tugas. Pastikan server backend berjalan.</p>`;
+        container.innerHTML = `<p class="text-center">Gagal memuat data tugas.</p>`;
     }
 }
 

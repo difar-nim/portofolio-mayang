@@ -22,7 +22,7 @@
         <div id="success-msg" class="success-msg"></div>
         <div id="error-msg" class="error-msg"></div>
 
-        <form id="tugas-form" enctype="multipart/form-data">
+        <form id="tugas-form">
           <input type="hidden" id="tugas-id" />
 
           <div class="form-group">
@@ -41,21 +41,16 @@
           </div>
 
           <div class="form-group">
-            <label for="file">Upload File Tugas</label>
-            <input type="file" id="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.jpg,.jpeg,.png" />
-            <small>Format: PDF, DOC, PPT, XLS, ZIP, JPG, PNG. Maksimal 10MB.</small>
-            <div id="current-file"></div>
+            <label for="file">Link Google Drive</label>
+            <input type="url" id="file" placeholder="https://drive.google.com/file/d/..." />
+            <small>
+              Cara mendapatkan link: Upload file ke Google Drive → Klik kanan file →
+              <strong>Share</strong> → Ubah akses ke <strong>"Anyone with the link"</strong>
+              → Copy link → Paste di sini.
+            </small>
           </div>
 
-          <!-- Progress upload -->
-          <div id="upload-progress" style="display:none; margin-bottom:15px;">
-            <div style="background:#f1f3f4; border-radius:4px; overflow:hidden; height:8px;">
-              <div id="progress-bar" style="width:0%; height:100%; background:#1a73e8; transition:width 0.3s;"></div>
-            </div>
-            <small id="progress-text" style="color:#5f6368;">Mengupload file...</small>
-          </div>
-
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:5px;">
             <button type="submit" id="submit-btn" class="btn">💾 Simpan Tugas</button>
             <button type="button" id="cancel-edit-btn" class="btn btn-secondary" style="display:none;">✕ Batal Edit</button>
           </div>

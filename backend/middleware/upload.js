@@ -1,7 +1,6 @@
 const multer = require('multer');
 
-// Simpan file di memory buffer (tidak di disk)
-// karena langsung dikirim ke Cloudinary
+// Simpan di memory buffer, langsung dikirim ke Google Drive
 const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
